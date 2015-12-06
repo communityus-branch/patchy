@@ -78,7 +78,7 @@ function makeSphere(position, rotation, diameter, color) {
   * @param {Object} color Object with red, green, blue keys (0..255).
   * @param {string} title Display title of node.
   * @param {string[]} inputs Array of input strings
-  * @param {string[]) outputs Array of output strings
+  * @param {string[]} outputs Array of output strings
   */
 var PatchNode = function (position, rotation, color, title, inputs, outputs) {
     this.title = title;
