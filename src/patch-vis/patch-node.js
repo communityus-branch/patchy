@@ -35,23 +35,19 @@ function calcTextColor(bgColor) {
 }
 
 function makeCell(position, rotation, width, color, text) {
-    var boxEntityProps = {
+    var boxEntity = Entities.addEntity({
         type: "Box",
         name: text + " Box",
         position: position,
         rotation: rotation,
         locked: false,
         dimensions: { x: width, y: NODE_CELL_HEIGHT, z: NODE_CELL_DEPTH },
-        color: color,
-        visible: true,
-        lifetime: 100000
-    };
-
-    var boxEntity = Entities.addEntity(boxEntityProps);
+        color: color
+    });
 
     var textOffset = Vec3.multiply(Quat.getFront(rotation), -(NODE_CELL_DEPTH / 2) - 0.01);
 
-    var textEntityProps = {
+    var textEntity = Entities.addEntity({
         type: "Text",
         name: text + " Text",
         position: Vec3.sum(position, textOffset),
@@ -60,11 +56,19 @@ function makeCell(position, rotation, width, color, text) {
         backgroundColor: color,
         textColor: calcTextColor(color),
         text: text,
-    };
+    });
 
-    var textEntity = Entities.addEntity(textEntityProps);
+    return [boxEntity, textEntity];
+}
 
-    return { boxEntity: boxEntity, textEntity: textEntity };
+function makeSphere(position, rotation, diameter, color) {
+    return Entities.addEntity({
+        type: "Sphere",
+        position: position,
+        rotation: rotation,
+        dimensions: { x: diameter, y: diameter, z: diameter },
+        color: color
+    });
 }
 
 /**
@@ -81,13 +85,16 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
     this.inputs = inputs;
     this.outputs = outputs;
 
-    this.cells = [];
-    this.cells.push(makeCell(position, rotation, NODE_WIDTH, color, title));
-    this.rootEntity = this.cells[0].boxEntity;
+    this.entities = [];
+    this.entities = this.entities.concat(makeCell(position, rotation, NODE_WIDTH, color, title));
+    this.rootEntity = this.entities[0];
 
+    // add input cells
     var downOffset = Vec3.multiply(Quat.getUp(rotation), -NODE_CELL_HEIGHT);
     var rightOffset = Vec3.multiply(Quat.getRight(rotation), NODE_WIDTH / 4);
     var leftOffset = Vec3.multiply(rightOffset, -1);
+    var rightSphereOffset = Vec3.multiply(Quat.getRight(rotation), (NODE_WIDTH / 4) + (NODE_CELL_HEIGHT / 2));
+    var leftSphereOffset = Vec3.multiply(rightSphereOffset, -1);
     var nextColor, nextPosition = Vec3.sum(position, leftOffset);
     var i, l = inputs.length;
     for (i = 0; i < l; i++) {
@@ -97,9 +104,11 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
         } else {
             nextColor = addColor(color, -15);
         }
-        this.cells.push(makeCell(nextPosition, rotation, NODE_WIDTH / 2, nextColor, inputs[i]));
+        this.entities = this.entities.concat(makeCell(nextPosition, rotation, NODE_WIDTH / 2, nextColor, inputs[i]));
+        this.entities.push(makeSphere(Vec3.sum(nextPosition, leftSphereOffset), rotation, NODE_CELL_HEIGHT, nextColor));
     }
 
+    // add output cells
     nextPosition = Vec3.sum(position, rightOffset);
     l = outputs.length;
     for (i = 0; i < l; i++) {
@@ -109,15 +118,14 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
         } else {
             nextColor = addColor(color, -15);
         }
-        this.cells.push(makeCell(nextPosition, rotation, NODE_WIDTH / 2, nextColor, outputs[i]));
+        this.entities = this.entities.concat(makeCell(nextPosition, rotation, NODE_WIDTH / 2, nextColor, outputs[i]));
+        this.entities.push(makeSphere(Vec3.sum(nextPosition, rightSphereOffset), rotation, NODE_CELL_HEIGHT, nextColor));
     }
 
     // make all entities children of the root entity.
-    linkEntities(this.rootEntity, this.cells[0].textEntity);
-    l = this.cells.length;
+    l = this.entities.length;
     for (i = 1; i < l; i++) {
-        linkEntities(this.rootEntity, this.cells[i].boxEntity);
-        linkEntities(this.rootEntity, this.cells[i].textEntity);
+        linkEntities(this.rootEntity, this.entities[i]);
     }
 
     Object.defineProperty(this, "position", {
@@ -135,10 +143,9 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
 };
 
 PatchNode.prototype.destroy = function () {
-    var i, l = this.cells.length;
+    var i, l = this.entities.length;
     for (i = 0; i < l; i++) {
-        Entities.deleteEntity(this.cells[i].boxEntity);
-        Entities.deleteEntity(this.cells[i].textEntity);
+        Entities.deleteEntity(this.entities[i]);
     }
 };
 
