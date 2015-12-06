@@ -34,9 +34,7 @@ function calcTextColor(bgColor) {
     }
 }
 
-// To work around bug with entity linking.
-// pass in parentID directly to addEntity().
-function makeCell(position, rotation, width, color, text, rootEntity) {
+function makeCell(position, rotation, width, color, text) {
     var boxEntityProps = {
         type: "Box",
         name: text + " Box",
@@ -48,10 +46,6 @@ function makeCell(position, rotation, width, color, text, rootEntity) {
         visible: true,
         lifetime: 100000
     };
-
-    if (rootEntity != undefined) {
-        boxEntityProps.parentID = rootEntity;
-    }
 
     var boxEntity = Entities.addEntity(boxEntityProps);
 
@@ -67,12 +61,6 @@ function makeCell(position, rotation, width, color, text, rootEntity) {
         textColor: calcTextColor(color),
         text: text,
     };
-
-    if (rootEntity != undefined) {
-        textEntityProps.parentID = rootEntity;
-    } else {
-        textEntityProps.parentID = boxEntity;
-    }
 
     var textEntity = Entities.addEntity(textEntityProps);
 
@@ -109,7 +97,7 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
         } else {
             nextColor = addColor(color, -15);
         }
-        this.cells.push(makeCell(nextPosition, rotation, NODE_WIDTH / 2, nextColor, inputs[i], this.rootEntity));
+        this.cells.push(makeCell(nextPosition, rotation, NODE_WIDTH / 2, nextColor, inputs[i]));
     }
 
     nextPosition = Vec3.sum(position, rightOffset);
@@ -121,18 +109,16 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
         } else {
             nextColor = addColor(color, -15);
         }
-        this.cells.push(makeCell(nextPosition, rotation, NODE_WIDTH / 2, nextColor, outputs[i], this.rootEntity));
+        this.cells.push(makeCell(nextPosition, rotation, NODE_WIDTH / 2, nextColor, outputs[i]));
     }
 
     // make all entities children of the root entity.
-    /*
     linkEntities(this.rootEntity, this.cells[0].textEntity);
     l = this.cells.length;
     for (i = 1; i < l; i++) {
         linkEntities(this.rootEntity, this.cells[i].boxEntity);
         linkEntities(this.rootEntity, this.cells[i].textEntity);
     }
-    */
 
     Object.defineProperty(this, "position", {
         get: this.getPosition,
