@@ -33,7 +33,7 @@ Ideally, it will make use of hand controllers for all it's functionality, includ
 * toggle visibility of nodes
 * position and orient nodes
 
-## pathcy-server
+## patchy-server
 
 **patchy-server.js** is an Assignment Client script that runs on the server.
 It is responsible for running the actual nodes implementation.
@@ -46,7 +46,7 @@ It receives notifications from **patchy-edit.js** using the Messaging pub-sub se
 
 These notifications will be used to make sure the server side node graph is kept in sync with the actual visual representation.
 
-## pathcy-entity
+## patchy-entity
 
 **patchy-entity.js** is a script that runs on each entity in the scene.
 It is responsible for forwarding entity events such as trigger enter/leave to the patchy-server via the Messaging pub-sub service.
