@@ -1,9 +1,11 @@
-patchy-min.js: src/*.js src/patch-graph/*.js src/patch-vis/*.js
-	rm -rf patchy-min.js
-	jshint src/*.js
-	jshint src/patch-graph/*.js
-	browserify src/patchy.js -o patchy-min.js
-	chmod -w patchy-min.js
+patchy-edit-min.js: src/patchy-edit.js src/patchy-edit/*.js
+	rm -rf patchy-edit-min.js
+	jshint src/patchy-edit.js
+	jshint src/patchy-edit/*.js
+	browserify src/patchy-edit.js -o patchy-edit-min.js
+	chmod -w patchy-edit-min.js
 
 clean:
-	rm -rf patchy-min.js
+	rm -rf patchy-edit-min.js
+	rm -rf patchy-server-min.js
+	rm -rf patchy-entity-min.js

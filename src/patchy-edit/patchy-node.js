@@ -72,7 +72,7 @@ function makeSphere(position, rotation, diameter, color) {
 }
 
 /**
-  * Constructs a new PatchNode instance
+  * Constructs a new PatchyNode instance
   * @param {Object} position Vec3 with object with x, y, z keys.
   * @param {Object} rotation Quaternion with x, y, z, w keys.
   * @param {Object} color Object with red, green, blue keys (0..255).
@@ -80,7 +80,7 @@ function makeSphere(position, rotation, diameter, color) {
   * @param {string[]} inputs Array of input strings
   * @param {string[]} outputs Array of output strings
   */
-var PatchNode = function (position, rotation, color, title, inputs, outputs) {
+var PatchyNode = function (position, rotation, color, title, inputs, outputs) {
     this.title = title;
     this.inputs = inputs;
     this.outputs = outputs;
@@ -99,7 +99,7 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
     var i, l = inputs.length;
     for (i = 0; i < l; i++) {
         nextPosition = Vec3.sum(nextPosition, downOffset);
-        if ((i % 2) == 0) {
+        if ((i % 2) === 0) {
             nextColor = addColor(color, 15);
         } else {
             nextColor = addColor(color, -15);
@@ -113,7 +113,7 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
     l = outputs.length;
     for (i = 0; i < l; i++) {
         nextPosition = Vec3.sum(nextPosition, downOffset);
-        if ((i % 2) == 1) {
+        if ((i % 2) === 1) {
             nextColor = addColor(color, 15);
         } else {
             nextColor = addColor(color, -15);
@@ -142,30 +142,30 @@ var PatchNode = function (position, rotation, color, title, inputs, outputs) {
     this.rotation = rotation;
 };
 
-PatchNode.prototype.destroy = function () {
+PatchyNode.prototype.destroy = function () {
     var i, l = this.entities.length;
     for (i = 0; i < l; i++) {
         Entities.deleteEntity(this.entities[i]);
     }
 };
 
-PatchNode.prototype.getPosition = function (position) {
+PatchyNode.prototype.getPosition = function (position) {
     return this._position;
 };
 
-PatchNode.prototype.setPosition = function (position) {
+PatchyNode.prototype.setPosition = function (position) {
     this._position = position;
     Entities.editEntity(this.rootEntity, { position: position });
 };
 
-PatchNode.prototype.getRotation = function (rotation) {
+PatchyNode.prototype.getRotation = function (rotation) {
     return this._rotation;
 };
 
-PatchNode.prototype.setRotation = function (rotation) {
+PatchyNode.prototype.setRotation = function (rotation) {
     this._rotation = rotation;
     Entities.editEntity(this.rootEntity, { rotation: rotation });
 };
 
 // exports
-exports.PatchNode = PatchNode;
+exports.PatchyNode = PatchyNode;
