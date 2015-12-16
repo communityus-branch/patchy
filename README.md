@@ -27,11 +27,11 @@ Patchy will contain three main scripts:
 **patchy-edit.js** is an Interface script and is only used to create new patchy nodes, and edit existing patchy nodes.
 Ideally, it will make use of hand controllers for all it's functionality, including:
 
-    * create new nodes of any type
-    * delete nodes
-    * make connection between nodes
-    * toggle visibility of nodes
-    * position and orient nodes
+* create new nodes of any type
+* delete nodes
+* make connection between nodes
+* toggle visibility of nodes
+* position and orient nodes
 
 ## pathcy-server
 
@@ -40,9 +40,9 @@ It is responsible for running the actual nodes implementation.
 These nodes will edit entity properties to make the behavior visible to all clients.
 It receives notifications from **patchy-edit.js** using the Messaging pub-sub service, for the following events.
 
-    * node created
-    * new link between nodes
-    * node deleted
+* node created
+* new link between nodes
+* node deleted
 
 These notifications will be used to make sure the server side node graph is kept in sync with the actual visual representation.
 
