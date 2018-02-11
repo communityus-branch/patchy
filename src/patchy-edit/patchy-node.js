@@ -20,9 +20,11 @@ function addColor(color, amount) {
     var red = color.red + amount;
     var green = color.green + amount;
     var blue = color.blue + amount;
-    return { red: clamp(red, 0, 255),
-             green: clamp(green, 0, 255),
-             blue: clamp(blue, 0, 255) };
+    return {
+        red: clamp(red, 0, 255),
+        green: clamp(green, 0, 255),
+        blue: clamp(blue, 0, 255)
+    };
 }
 
 function calcTextColor(bgColor) {
@@ -55,7 +57,7 @@ function makeCell(position, rotation, width, color, text) {
         dimensions: { x: width, y: NODE_CELL_HEIGHT, z: NODE_CELL_DEPTH },
         backgroundColor: color,
         textColor: calcTextColor(color),
-        text: text,
+        text: text
     });
 
     return [boxEntity, textEntity];

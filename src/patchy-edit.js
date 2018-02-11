@@ -1,3 +1,5 @@
+/* global PatchyEdit:true, require */
+
 PatchyEdit = require("./patchy-edit/patchy-edit.js").PatchyEdit;
 
 // TODO: move this into a button class helper
@@ -85,12 +87,14 @@ App.prototype.makeNewNode = function () {
     var spawnPoint = Vec3.sum(MyAvatar.position, Vec3.multiply(3, Quat.getFront(Camera.getOrientation())));
     var spawnOrientation = Camera.getOrientation();
 
-    var patchNode = new PatchyEdit.PatchyNode(Vec3.sum(spawnPoint, {x: 0, y: 1, z: 0}),
-                                              spawnOrientation,
-                                              { red: 155, green: 50, blue: 200 },
-                                              "Test Node",
-                                              ["input 1", "input 2", "input 3"],
-                                              ["output 1", "output 2"]);
+    var patchNode = new PatchyEdit.PatchyNode(
+        Vec3.sum(spawnPoint, {x: 0, y: 1, z: 0}),
+        spawnOrientation,
+        { red: 155, green: 50, blue: 200 },
+        "Test Node",
+        ["input 1", "input 2", "input 3"],
+        ["output 1", "output 2"]
+    );
     this.patchNodes.push(patchNode);
 };
 

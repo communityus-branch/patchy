@@ -1,7 +1,7 @@
 patchy-edit-min.js: src/patchy-edit.js src/patchy-edit/*.js
 	rm -rf patchy-edit-min.js
-	jshint src/patchy-edit.js
-	jshint src/patchy-edit/*.js
+	eslint src/patchy-edit.js
+	eslint src/patchy-edit/*.js
 	browserify src/patchy-edit.js -o patchy-edit-min.js
 	chmod -w patchy-edit-min.js
 
